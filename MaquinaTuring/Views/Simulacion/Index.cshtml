@@ -1,0 +1,183 @@
+@model MaquinaTuring.ViewModels.SimulacionViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Máquina de Turing — RSA";
+}
+
+<link rel="stylesheet" href="~/css/simulacion.css" />
+
+<div class="contenedor">
+
+    @* ── Encabezado ─────────────────────────────────────────────── *@
+    <header class="encabezado">
+        <h1>Máquina de Turing — Cifrado RSA</h1>
+        <p>Simulación paso a paso de generación de claves, cifrado y descifrado</p>
+    </header>
+
+    @* ── Formulario de entrada ───────────────────────────────────── *@
+    <section class="formulario-entrada">
+        <h2>Parámetros de simulación</h2>
+        <form method="post" action="/Simulacion/Iniciar">
+            @Html.AntiForgeryToken()
+            <div class="campos">
+
+                <div class="campo">
+                    <label for="PrimoP">Primo p</label>
+                    <input type="number" id="PrimoP" name="PrimoP"
+                           value="@Model.PrimoP" min="2" max="999" placeholder="ej. 61" />
+                    <span class="error-validacion">@Html.ValidationMessage("PrimoP")</span>
+                </div>
+
+                <div class="campo">
+                    <label for="PrimoQ">Primo q</label>
+                    <input type="number" id="PrimoQ" name="PrimoQ"
+                           value="@Model.PrimoQ" min="2" max="999" placeholder="ej. 53" />
+                    <span class="error-validacion">@Html.ValidationMessage("PrimoQ")</span>
+                </div>
+
+                <div class="campo">
+                    <label for="Mensaje">Mensaje</label>
+                    <input type="text" id="Mensaje" name="Mensaje"
+                           value="@Model.Mensaje" maxlength="20" placeholder="ej. HOLA" />
+                    <span class="error-validacion">@Html.ValidationMessage("Mensaje")</span>
+                </div>
+
+                <div class="campo">
+                    <label for="velocidad">Velocidad automático (ms)</label>
+                    <input type="number" id="velocidad"
+                           value="@Model.VelocidadMs" min="200" max="3000" step="100" />
+                </div>
+
+                <div class="campo" style="justify-content: flex-end;">
+                    <button type="submit" class="btn-iniciar">Iniciar simulación</button>
+                </div>
+
+            </div>
+        </form>
+    </section>
+
+    @if (Model.SimulacionIniciada)
+    {
+        @* ── Módulos ────────────────────────────────────────────── *@
+        @foreach (var modulo in new[] { Model.Modulo1, Model.Modulo2, Model.Modulo3 })
+        {
+            <section class="modulo">
+
+                @* Cabecera *@
+                <div class="modulo-cabecera">
+                    <span class="modulo-titulo">@modulo.Nombre</span>
+                    <span class="modulo-estado">@modulo.EstadoActual</span>
+                    <span class="modulo-progreso">@modulo.ProgresoTexto</span>
+                </div>
+
+                @* Cintas *@
+                <div class="cintas-contenedor">
+                    @foreach (var cinta in modulo.Cintas)
+                    {
+                        <div class="cinta">
+                            <div class="cinta-etiqueta">@cinta.Etiqueta</div>
+                            <div class="cinta-descripcion">@cinta.Descripcion</div>
+                            <div class="cinta-celdas">
+                                @foreach (var celda in cinta.Celdas)
+                                {
+                                    var clases = "celda"
+                                        + (celda.EsActiva    ? " activa"    : "")
+                                        + (celda.EsBlanco    ? " blanco"    : "")
+                                        + (celda.EsSeparador ? " separador" : "");
+                                    <div class="@clases">@celda.Simbolo</div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @* Instrucciones *@
+                <div class="instrucciones-contenedor">
+                    <div class="instrucciones-titulo">Instrucciones</div>
+                    @foreach (var inst in modulo.Instrucciones)
+                    {
+                        var claseInst = "instruccion " + inst.Estado.ToString().ToLower();
+                        var icono = inst.Estado switch
+                        {
+                            MaquinaTuring.ViewModels.EstadoInstruccion.Completada => "✓",
+                            MaquinaTuring.ViewModels.EstadoInstruccion.Activa     => "▶",
+                            MaquinaTuring.ViewModels.EstadoInstruccion.Error      => "✗",
+                            _                                                  => "·"
+                        };
+                        <div class="@claseInst">
+                            <span class="instruccion-icono">@icono</span>
+                            <span class="instruccion-numero">@inst.Numero.ToString("D2")</span>
+                            <div class="instruccion-contenido">
+                                <div class="instruccion-transicion">@inst.Resumen</div>
+                                <div class="instruccion-descripcion">@inst.Descripcion</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @* Navegación *@
+                <div class="navegacion">
+                    <span class="navegacion-pasos">@modulo.ProgresoTexto</span>
+
+                    <form id="form-modulo-@modulo.Numero"
+                          method="post" action="/Simulacion/Navegar">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="modulo" value="@modulo.Numero" />
+
+                        <div class="navegacion-botones">
+                            <button type="submit" class="btn-nav"
+                                    name="direccion" value="anterior"
+                                    @(!modulo.HayPasoAnterior ? "disabled" : "")>
+                                ← Anterior
+                            </button>
+
+                            <button type="submit" class="btn-nav"
+                                    name="direccion" value="siguiente"
+                                    @(!modulo.HaySiguientePaso ? "disabled" : "")>
+                                Siguiente →
+                            </button>
+
+                            <button type="button" class="btn-nav btn-auto"
+                                    id="btn-auto-@modulo.Numero"
+                                    @(modulo.EstaCompleto ? "disabled" : "")>
+                                ▶ Auto
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </section>
+        }
+
+        @* ── Resumen final ───────────────────────────────────────── *@
+        @if (Model.Resumen != null)
+        {
+            <section class="resumen">
+                <h2>✓ Resumen de la simulación</h2>
+                <table class="resumen-tabla">
+                    <tr><td>Primos</td>
+                        <td>p = @Model.Resumen.PrimoP  /  q = @Model.Resumen.PrimoQ</td></tr>
+                    <tr><td>Módulo n</td>
+                        <td>@Model.Resumen.Modulo</td></tr>
+                    <tr><td>Totiente φ(n)</td>
+                        <td>@Model.Resumen.Totiente</td></tr>
+                    <tr><td>Clave pública (e, n)</td>
+                        <td>(@Model.Resumen.ExponentePublico, @Model.Resumen.Modulo)</td></tr>
+                    <tr><td>Clave privada (d, n)</td>
+                        <td>(@Model.Resumen.ExponentePrivado, @Model.Resumen.Modulo)</td></tr>
+                    <tr><td>Mensaje original</td>
+                        <td>@Model.Resumen.MensajeOriginal</td></tr>
+                    <tr><td>Mensaje cifrado</td>
+                        <td>@Model.Resumen.MensajeCifrado</td></tr>
+                    <tr><td>Mensaje descifrado</td>
+                        <td>@Model.Resumen.MensajeDescifrado</td></tr>
+                    <tr><td>Verificación</td>
+                        <td>@(Model.Resumen.Exitoso ? "✓ Correcto" : "✗ Error")</td></tr>
+                </table>
+            </section>
+        }
+    }
+
+</div>
+
+<script src="~/js/simulacion.js"></script>

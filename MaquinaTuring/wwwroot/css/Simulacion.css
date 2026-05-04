@@ -1,0 +1,423 @@
+/* ── Variables ─────────────────────────────────────────────────── */
+:root {
+    --color-fondo:        #0f1117;
+    --color-superficie:   #1a1d27;
+    --color-borde:        #2e3148;
+    --color-primario:     #6c8ef7;
+    --color-activo:       #f7c66c;
+    --color-completado:   #5dbf8a;
+    --color-error:        #f76c6c;
+    --color-texto:        #e2e6f0;
+    --color-texto-suave:  #7a82a0;
+    --color-separador:    #444a70;
+    --color-celda:        #22263a;
+    --color-celda-activa: #f7c66c;
+    --radio:              6px;
+    --fuente-mono:        'Courier New', Courier, monospace;
+}
+
+/* ── Reset y base ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background:  var(--color-fondo);
+    color:       var(--color-texto);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size:   15px;
+    line-height: 1.6;
+}
+
+/* ── Layout general ────────────────────────────────────────────── */
+.contenedor {
+    max-width:  1100px;
+    margin:     0 auto;
+    padding:    24px 16px;
+}
+
+/* ── Encabezado ────────────────────────────────────────────────── */
+.encabezado {
+    text-align:    center;
+    margin-bottom: 40px;
+}
+
+.encabezado h1 {
+    font-size:   2rem;
+    font-weight: 700;
+    color:       var(--color-primario);
+    letter-spacing: 0.5px;
+}
+
+.encabezado p {
+    color:     var(--color-texto-suave);
+    margin-top: 6px;
+}
+
+/* ── Formulario de entrada ─────────────────────────────────────── */
+.formulario-entrada {
+    background:    var(--color-superficie);
+    border:        1px solid var(--color-borde);
+    border-radius: var(--radio);
+    padding:       28px;
+    margin-bottom: 40px;
+}
+
+.formulario-entrada h2 {
+    font-size:     1.1rem;
+    color:         var(--color-primario);
+    margin-bottom: 20px;
+}
+
+.campos {
+    display:   flex;
+    gap:       16px;
+    flex-wrap: wrap;
+}
+
+.campo {
+    display:        flex;
+    flex-direction: column;
+    gap:            6px;
+    flex:           1;
+    min-width:      140px;
+}
+
+.campo label {
+    font-size: 0.82rem;
+    color:     var(--color-texto-suave);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.campo input {
+    background:    var(--color-celda);
+    border:        1px solid var(--color-borde);
+    border-radius: var(--radio);
+    color:         var(--color-texto);
+    padding:       8px 12px;
+    font-size:     0.95rem;
+    outline:       none;
+    transition:    border-color 0.2s;
+}
+
+.campo input:focus {
+    border-color: var(--color-primario);
+}
+
+.campo .error-validacion {
+    font-size: 0.78rem;
+    color:     var(--color-error);
+}
+
+.btn-iniciar {
+    align-self:    flex-end;
+    background:    var(--color-primario);
+    color:         #fff;
+    border:        none;
+    border-radius: var(--radio);
+    padding:       10px 28px;
+    font-size:     0.95rem;
+    font-weight:   600;
+    cursor:        pointer;
+    transition:    opacity 0.2s;
+}
+
+.btn-iniciar:hover { opacity: 0.85; }
+
+/* ── Sección de módulo ─────────────────────────────────────────── */
+.modulo {
+    background:    var(--color-superficie);
+    border:        1px solid var(--color-borde);
+    border-radius: var(--radio);
+    margin-bottom: 32px;
+    overflow:      hidden;
+}
+
+.modulo-cabecera {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    padding:         14px 20px;
+    background:      #1e2235;
+    border-bottom:   1px solid var(--color-borde);
+    flex-wrap:       wrap;
+    gap:             8px;
+}
+
+.modulo-titulo {
+    font-size:   1rem;
+    font-weight: 700;
+    color:       var(--color-primario);
+}
+
+.modulo-estado {
+    font-family: var(--fuente-mono);
+    font-size:   0.78rem;
+    background:  var(--color-celda);
+    border:      1px solid var(--color-borde);
+    border-radius: 20px;
+    padding:     3px 12px;
+    color:       var(--color-texto-suave);
+}
+
+.modulo-progreso {
+    font-size: 0.82rem;
+    color:     var(--color-texto-suave);
+}
+
+/* ── Cintas ────────────────────────────────────────────────────── */
+.cintas-contenedor {
+    display:   flex;
+    gap:       16px;
+    padding:   20px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.cinta {
+    flex:       1;
+    min-width:  180px;
+}
+
+.cinta-etiqueta {
+    font-size:     0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color:         var(--color-texto-suave);
+    margin-bottom: 4px;
+}
+
+.cinta-descripcion {
+    font-size:     0.78rem;
+    color:         var(--color-texto-suave);
+    margin-bottom: 10px;
+    font-style:    italic;
+}
+
+.cinta-celdas {
+    display:    flex;
+    flex-wrap:  wrap;
+    gap:        4px;
+    align-items: center;
+}
+
+.celda {
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    width:           36px;
+    height:          36px;
+    background:      var(--color-celda);
+    border:          1px solid var(--color-borde);
+    border-radius:   4px;
+    font-family:     var(--fuente-mono);
+    font-size:       0.88rem;
+    color:           var(--color-texto);
+    transition:      background 0.2s, border-color 0.2s;
+    position:        relative;
+}
+
+.celda.activa {
+    background:   var(--color-celda-activa);
+    border-color: var(--color-celda-activa);
+    color:        #1a1d27;
+    font-weight:  700;
+}
+
+.celda.blanco {
+    color:        var(--color-borde);
+    border-style: dashed;
+}
+
+.celda.separador {
+    color:        var(--color-separador);
+    font-weight:  700;
+}
+
+/* Indicador de cabeza lectora debajo de la celda activa */
+.celda.activa::after {
+    content:    '▲';
+    position:   absolute;
+    bottom:     -18px;
+    left:       50%;
+    transform:  translateX(-50%);
+    font-size:  10px;
+    color:      var(--color-celda-activa);
+}
+
+/* ── Panel de instrucciones ────────────────────────────────────── */
+.instrucciones-contenedor {
+    padding: 16px 20px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.instrucciones-titulo {
+    font-size:     0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color:         var(--color-texto-suave);
+    margin-bottom: 10px;
+}
+
+.instruccion {
+    display:       flex;
+    gap:           10px;
+    align-items:   flex-start;
+    padding:       7px 10px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    font-size:     0.83rem;
+    transition:    background 0.15s;
+}
+
+.instruccion.activa {
+    background: #2a2e45;
+    border-left: 3px solid var(--color-activo);
+}
+
+.instruccion.completada {
+    opacity: 0.55;
+}
+
+.instruccion.error {
+    border-left: 3px solid var(--color-error);
+    background:  #2a1f1f;
+}
+
+.instruccion-icono {
+    font-size:   0.85rem;
+    min-width:   16px;
+    margin-top:  1px;
+}
+
+.instruccion.completada .instruccion-icono { color: var(--color-completado); }
+.instruccion.activa     .instruccion-icono { color: var(--color-activo); }
+.instruccion.pendiente  .instruccion-icono { color: var(--color-borde); }
+.instruccion.error      .instruccion-icono { color: var(--color-error); }
+
+.instruccion-numero {
+    font-family: var(--fuente-mono);
+    font-size:   0.75rem;
+    color:       var(--color-texto-suave);
+    min-width:   22px;
+}
+
+.instruccion-contenido { flex: 1; }
+
+.instruccion-transicion {
+    font-family: var(--fuente-mono);
+    font-size:   0.78rem;
+    color:       var(--color-primario);
+}
+
+.instruccion-descripcion {
+    font-size: 0.78rem;
+    color:     var(--color-texto-suave);
+    margin-top: 2px;
+}
+
+/* ── Controles de navegación ───────────────────────────────────── */
+.navegacion {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    padding:         12px 20px;
+    border-top:      1px solid var(--color-borde);
+    background:      #1c1f30;
+    flex-wrap:       wrap;
+    gap:             8px;
+}
+
+.navegacion-pasos {
+    font-size: 0.82rem;
+    color:     var(--color-texto-suave);
+}
+
+.navegacion-botones {
+    display: flex;
+    gap:     8px;
+}
+
+.btn-nav {
+    background:    var(--color-celda);
+    color:         var(--color-texto);
+    border:        1px solid var(--color-borde);
+    border-radius: var(--radio);
+    padding:       7px 18px;
+    font-size:     0.85rem;
+    cursor:        pointer;
+    transition:    background 0.2s, border-color 0.2s;
+}
+
+.btn-nav:hover:not(:disabled) {
+    background:   #2e3358;
+    border-color: var(--color-primario);
+}
+
+.btn-nav:disabled {
+    opacity: 0.35;
+    cursor:  not-allowed;
+}
+
+.btn-auto {
+    background: #2a3a5c;
+    color:      var(--color-primario);
+    border-color: var(--color-primario);
+}
+
+.btn-auto.corriendo {
+    background:   #3a2a2a;
+    color:        var(--color-error);
+    border-color: var(--color-error);
+}
+
+/* ── Resumen final ─────────────────────────────────────────────── */
+.resumen {
+    background:    var(--color-superficie);
+    border:        1px solid var(--color-completado);
+    border-radius: var(--radio);
+    padding:       24px;
+    margin-top:    8px;
+}
+
+.resumen h2 {
+    font-size:     1rem;
+    color:         var(--color-completado);
+    margin-bottom: 16px;
+}
+
+.resumen-tabla {
+    width:           100%;
+    border-collapse: collapse;
+    font-size:       0.88rem;
+}
+
+.resumen-tabla td {
+    padding:      6px 12px;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.resumen-tabla td:first-child {
+    color:      var(--color-texto-suave);
+    width:      40%;
+    font-size:  0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.resumen-tabla td:last-child {
+    font-family: var(--fuente-mono);
+    color:       var(--color-texto);
+}
+
+/* ── Scrollbar personalizado ───────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-fondo); }
+::-webkit-scrollbar-thumb { background: var(--color-borde); border-radius: 3px; }
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .campos         { flex-direction: column; }
+    .cintas-contenedor { flex-direction: column; }
+    .modulo-cabecera   { flex-direction: column; align-items: flex-start; }
+}
