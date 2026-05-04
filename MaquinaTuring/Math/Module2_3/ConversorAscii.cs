@@ -46,7 +46,7 @@ public class ConversorAscii
 	/// <summary>
 	/// Valida un valor descifrado y devuelve el motivo si es inválido.
 	/// </summary>
-	public static string? Desencriptor(int valor)
+	public static string? Desencriptador(int valor)
 	{
 		if (!EsValido(valor))
 			return $"Valor {valor} fuera del rango ASCII imprimible " +

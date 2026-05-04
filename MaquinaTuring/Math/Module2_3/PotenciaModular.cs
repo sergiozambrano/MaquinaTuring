@@ -34,6 +34,43 @@ public class PotenciaModular
  
         return result;
     }
+    
+    /// <summary>
+    /// Versión con traza: devuelve el resultado y cada iteración
+    /// para que el StateLogger pueda mostrar el proceso en la vista.
+    /// Cada entrada de la traza representa una iteración:
+    ///   (número de iteración, bit procesado, resultado parcial, base al cuadrado)
+    /// </summary>
+    public static (long Result, List<StepTrace> Trace) CalcularConTraza(
+        long base_, long exponent, long modulus)
+    {
+        if (modulus == 1) return (0, []);
+ 
+        var trace  = new List<StepTrace>();
+        long result = 1;
+        long currentBase = base_ % modulus;
+        int iteration = 1;
+ 
+        long exp = exponent;
+        while (exp > 0)
+        {
+            int bit = (int)(exp & 1);
+            long prevResult = result;
+ 
+            if (bit == 1)
+                result = result * currentBase % modulus;
+ 
+            long nextBase = currentBase * currentBase % modulus;
+ 
+            trace.Add(new StepTrace(iteration, bit, prevResult, currentBase, result, nextBase));
+ 
+            exp >>= 1;
+            currentBase = nextBase;
+            iteration++;
+        }
+ 
+        return (result, trace);
+    }
 }
 
 /// <summary>
